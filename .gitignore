@@ -1,0 +1,9 @@
+# Binaries
+/backend/bin/
+
+# OS specific
+.DS_Store
+
+# IDEs
+.idea/
+.vscode/
