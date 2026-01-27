@@ -7,3 +7,9 @@
 # IDEs
 .idea/
 .vscode/
+
+# Environment files
+.env
+
+# Temporary files
+backend/tmp
