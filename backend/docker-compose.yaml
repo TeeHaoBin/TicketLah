@@ -1,0 +1,41 @@
+services:
+  app:
+    tty: true
+    restart: always
+    build: .
+    image: ticketlah-backend
+    container_name: ticketlah-backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    networks:
+      - application
+    volumes:
+      - ./:/src/app
+    command: air -c .air.toml
+
+  db:
+    image: postgres:alpine
+    container_name: TicketLah-DB
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    networks:
+      - application
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  application:
+
+volumes:
+  postgres-db:
