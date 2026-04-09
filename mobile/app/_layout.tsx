@@ -6,7 +6,7 @@ export default function Root() {
     <>
       <StatusBar style="dark" />
       {/* Authentication Provider */}
-      < Slot />
+      <Slot />
       {/* Authentication Provider */}
     </>
   );

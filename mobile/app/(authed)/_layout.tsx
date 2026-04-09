@@ -3,7 +3,7 @@ import { Redirect, Stack } from "expo-router";
 export default function AppLayout() {
     // check from context if use if logged in
 
-    const isLoggedIn = true;
+    const isLoggedIn = false;
 
     if (!isLoggedIn) {
         return <Redirect href="/login" />;
