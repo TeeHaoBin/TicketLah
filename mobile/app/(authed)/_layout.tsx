@@ -1,9 +1,8 @@
+import { useAuth } from "@/context/AuthContext";
 import { Redirect, Stack } from "expo-router";
 
 export default function AppLayout() {
-    // check from context if use if logged in
-
-    const isLoggedIn = false;
+    const { isLoggedIn } = useAuth();
 
     if (!isLoggedIn) {
         return <Redirect href="/login" />;
