@@ -49,11 +49,11 @@ export function AuthenticationProvider({ children }: PropsWithChildren) {
                 ? await userService.login({ email, password })
                 : await userService.register({ email, password });
             
-            if (res.token && res.user) {
-                await AsyncStorage.setItem("token", res.token);
-                await AsyncStorage.setItem("user", JSON.stringify(res.user));
+            if (res.data?.token && res.data?.user) {
+                await AsyncStorage.setItem("token", res.data.token);
+                await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
                 setIsLoggedIn(true);
-                setUser(res.user);
+                setUser(res.data.user);
                 router.replace("/(authed)/(tabs)/(events)");
             }
         } catch (error) {
