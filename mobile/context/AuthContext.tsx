@@ -1,3 +1,4 @@
+import { userService } from "@/services/user";
 import { User } from "@/types/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
@@ -7,7 +8,7 @@ import { createContext, PropsWithChildren, useContext, useEffect, useState } fro
 interface AuthContextProps {
     isLoggedIn: boolean;
     isLoadingAuth: boolean;
-    authentication: (authMode: "login" | "register", email: string, password: string) => Promise<void>;
+    authenticate: (authMode: "login" | "register", email: string, password: string) => Promise<void>;
     logout: VoidFunction; // VoidFunction same as () => void
     user: User | null;
 }
@@ -41,17 +42,38 @@ export function AuthenticationProvider({ children }: PropsWithChildren) {
         checkIfLoggedIn();
     }, [])
 
-    const authentication = async (authMode: "login" | "register", email: string, password: string) => {
-        // TODO: implement
+    const authenticate = async (authMode: "login" | "register", email: string, password: string) => {
+        try {
+            setIsLoadingAuth(true);
+            const res = authMode === "login" 
+                ? await userService.login({ email, password })
+                : await userService.register({ email, password });
+            
+            if (res.token && res.user) {
+                await AsyncStorage.setItem("token", res.token);
+                await AsyncStorage.setItem("user", JSON.stringify(res.user));
+                setIsLoggedIn(true);
+                setUser(res.user);
+                router.replace("/(authed)/(tabs)/(events)");
+            }
+        } catch (error) {
+            console.error("Auth error:", error);
+        } finally {
+            setIsLoadingAuth(false);
+        }
     };
 
-    const logout = () => {
-        // TODO: implement
+    const logout = async () => {
+        await AsyncStorage.removeItem("token");
+        await AsyncStorage.removeItem("user");
+        setIsLoggedIn(false);
+        setUser(null);
+        router.replace("/login");
     };
 
     return (
         <AuthContext.Provider
-            value={{ isLoggedIn, isLoadingAuth, user, authentication, logout }}
+            value={{ isLoggedIn, isLoadingAuth, user, authenticate, logout }}
         >
             {children}
         </AuthContext.Provider>
