@@ -57,7 +57,7 @@ func (h *TicketHandler) GetOne(ctx *fiber.Ctx) error {
 	var QRCode []byte
 	
 	QRCode, err = qrcode.Encode(
-		fmt.Sprintf("ticketId:%v","ownerId:%v", ticketId, userId),
+		fmt.Sprintf("ticketId:%v,ownerId:%v", ticketId, userId),
 		qrcode.Medium,
 		256,
 	)
@@ -74,7 +74,7 @@ func (h *TicketHandler) GetOne(ctx *fiber.Ctx) error {
 		"message": "Ticket fetched successfully",
 		"data": &fiber.Map{
 			"ticket": ticket,
-			"QRCode": QRCode,
+			"qrcode": QRCode,
 		},
 	})
 }
