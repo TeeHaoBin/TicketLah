@@ -1,8 +1,15 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Platform } from "react-native";
+import Constants from "expo-constants";
 
-const url = Platform.OS === "android" ? "http://10.0.2.2:3000" : "http://127.0.0.1:3000"
+// Get the dev server host IP so physical devices can reach the backend.
+// In dev, Expo exposes the host machine's IP via debuggerHost (e.g. "192.168.100.226:8081").
+// This works for both emulators and physical devices on the same Wi-Fi network.
+const devServerHost = Constants.expoConfig?.hostUri?.split(":")[0] 
+  ?? Constants.manifest2?.extra?.expoGo?.debuggerHost?.split(":")[0]
+  ?? "127.0.0.1";
+
+const url = `http://${devServerHost}:3000`
 
 const Api: AxiosInstance = axios.create({baseURL: url + "/api"})
 

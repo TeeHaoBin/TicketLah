@@ -17,7 +17,7 @@ export default function Login() {
     const [authMode, setAuthMode] = useState<"login" | "register">("login");
 
     async function onAuthenticate() {
-        await authenticate(authMode, email, password);
+        await authenticate(authMode, email.trim(), password);
     }
 
     function onToggleAuthMode() {

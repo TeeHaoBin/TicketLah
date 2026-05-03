@@ -3,6 +3,8 @@ import { User } from "@/types/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { Alert } from "react-native";
 
 
 interface AuthContextProps {
@@ -57,7 +59,13 @@ export function AuthenticationProvider({ children }: PropsWithChildren) {
                 router.replace("/(authed)/(tabs)/(events)");
             }
         } catch (error) {
-            console.error("Auth error:", error);
+            if (axios.isAxiosError(error)) {
+                console.error("Auth error response:", error.response?.data);
+                Alert.alert("Authentication Failed", error.response?.data?.message || error.response?.data?.error || "Invalid credentials or bad request.");
+            } else {
+                console.error("Auth error:", error);
+                Alert.alert("Authentication Failed", "An unexpected error occurred.");
+            }
         } finally {
             setIsLoadingAuth(false);
         }
