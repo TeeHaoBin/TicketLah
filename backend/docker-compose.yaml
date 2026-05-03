@@ -11,9 +11,9 @@ services:
       - .env
     networks:
       - application
-    volumes:
-      - ./:/src/app
-    command: air -c .air.toml
+    depends_on:
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:alpine
